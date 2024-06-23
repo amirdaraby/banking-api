@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Account;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,9 +14,10 @@ return new class extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Account::class)->constrained();
-            $table->string('card_number')->unique();
+            $table->string('number', 16)->unique();
             $table->date('expiration_date');
-            $table->string('cvv', 4);
+            $table->string('cvv2', 4);
+            $table->string('password');
             $table->timestamps();
         });
     }

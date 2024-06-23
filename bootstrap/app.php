@@ -12,8 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->group('api', [
+            \App\Http\Middleware\EnsureJsonResponse::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->renderable(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e){
+            return \App\Http\Helpers\ResponseJson::error("Not found", \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+        });
     })->create();
