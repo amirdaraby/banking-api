@@ -11,6 +11,11 @@ return [
         'failed' => 'Cannot create user right now, try again later.',
     ],
 
+    'show' => [
+        'success' => 'User show',
+        'failed' => 'Cannot find user right now, try again later.'
+    ],
+
     'update' => [
         'success' => 'User updated',
         'failed' => 'User update failed, try again later.',

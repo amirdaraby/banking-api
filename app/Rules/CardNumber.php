@@ -16,7 +16,7 @@ class CardNumber implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! Card::isValid($value)) {
-            $fail('invalid_card_number')->translate();
+            $fail('validation.invalid_card_number')->translate();
         }
     }
 }

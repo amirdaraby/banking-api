@@ -23,7 +23,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'phone_number' => fake()->numerify('09###'),
+            'phone_number' => fake()->unique()->numerify('09#######'),
         ];
     }
 

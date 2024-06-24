@@ -38,7 +38,7 @@ class UserController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $user = $this->userRepository->findOrFailById($id, ["id", "name", "phone_number"]);
+        $user = $this->userRepository->findOrFailById($id, ["id", "name", "phone_number"], ['accounts', 'accounts.cards']);
 
         return ResponseJson::success(ShowResource::make($user), __('users.show.success'), Response::HTTP_OK);
     }

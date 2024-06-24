@@ -35,11 +35,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Route::patterns([
-            'user_id' => '[0-9]+',
-            'account_id' => '[0-9]+',
-            'card_id' => '[0-9]+',
-            'transaction_id' => '[0-9]+',
-            'transaction_cost_id' => '[0-9]+',
+            'id' => '[0-9]+',
         ]);
     }
 }

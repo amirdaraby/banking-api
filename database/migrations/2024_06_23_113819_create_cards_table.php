@@ -13,11 +13,13 @@ return new class extends Migration {
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Account::class)->constrained();
+            $table->foreignIdFor(Account::class)->constrained('accounts');
             $table->string('number', 16)->unique();
-            $table->date('expiration_date');
+            $table->string('expiration_year', 4);
+            $table->string('expiration_month', 2);
             $table->string('cvv2', 4);
             $table->string('password');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

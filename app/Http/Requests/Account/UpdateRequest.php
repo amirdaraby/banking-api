@@ -3,11 +3,15 @@
 namespace App\Http\Requests\Account;
 
 use App\Rules\Number;
+use App\Traits\PrepareCardInformation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
+
+    use PrepareCardInformation;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -26,7 +30,12 @@ class UpdateRequest extends FormRequest
         return [
             'user_id' => ['int', 'exists:users,id'],
             'balance' => ['int'],
-            'number' => ['string', new Number(), Rule::unique('accounts')->ignore($this->route('account_id'))]
+            'number' => ['string', new Number(), Rule::unique('accounts')->ignore($this->route('id'))]
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->prepareCardNumerics(['balance', 'number']);
     }
 }

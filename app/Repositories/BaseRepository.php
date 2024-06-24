@@ -35,7 +35,7 @@ class BaseRepository implements BaseRepositoryInterface
      * @param int $perPage
      * @param string|null $orderBy
      * @param string $orderByDirection
-     * @return LengthAwarePaginator
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function listPaginated(array $columns = ["*"], array $relations = [], int $perPage = 50, string $orderBy = null, string $orderByDirection = 'asc')
     {

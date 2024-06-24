@@ -13,11 +13,11 @@ class TranslateNumbers
 
     public static function toEnglish(string $haystack): string
     {
-        return str_replace(self::ARABIC_NUMBERS, self::ENGLISH_NUMBERS, str_replace(self::PERSIAN_NUMBERS, self::ENGLISH_NUMBERS, $haystack));
+        return str_replace(self::PERSIAN_NUMBERS, self::ENGLISH_NUMBERS, str_replace(self::ARABIC_NUMBERS, self::ENGLISH_NUMBERS, $haystack));
     }
 
     public static function toPersian(string $haystack): string
     {
-        return str_replace(self::ENGLISH_NUMBERS, self::PERSIAN_NUMBERS, $haystack);
+        return str_replace(self::ENGLISH_NUMBERS, self::PERSIAN_NUMBERS, str_replace(self::ARABIC_NUMBERS, self::ENGLISH_NUMBERS, $haystack));
     }
 }

@@ -49,14 +49,14 @@ class AccountTest extends TestCase
 
     public function testAccountShowResponsesHttpNotFoundWhenThereIsNoAccountInDatabase(): void
     {
-        $response = $this->getJson(route('v1.accounts.show', ['account_id' => 1]));
+        $response = $this->getJson(route('v1.accounts.show', ['id' => 1]));
         $response->assertNotFound();
     }
 
     public function testAccountShowResponsesHttpOk(): void
     {
         $account = Account::factory()->create();
-        $response = $this->getJson(route('v1.accounts.show', ['account_id' => $account->id]));
+        $response = $this->getJson(route('v1.accounts.show', ['id' => $account->id]));
         $response->assertOk();
     }
 
@@ -65,7 +65,7 @@ class AccountTest extends TestCase
         $account = Account::factory()->create(['number' => '09303557608']);
         $account2 = Account::factory()->create(['number' => '09303557601']);
 
-        $response = $this->putJson(route('v1.accounts.update', ['account_id' => $account2->id]), ['number' => $account->number]);
+        $response = $this->putJson(route('v1.accounts.update', ['id' => $account2->id]), ['number' => $account->number]);
 
         $response->assertUnprocessable();
     }
@@ -73,14 +73,14 @@ class AccountTest extends TestCase
     public function testAccountUpdateResponsesHttpNotFoundWhenThereIsNoAccountInDatabase(): void
     {
         $user = User::factory()->create();
-        $response = $this->putJson(route('v1.accounts.update', ['account_id' => 1]), ['number' => '89898989', 'user_id' => $user->id]);
+        $response = $this->putJson(route('v1.accounts.update', ['id' => 1]), ['number' => '89898989', 'user_id' => $user->id]);
         $response->assertNotFound();
     }
 
     public function testAccountUpdateResponsesHttpAccepted(): void
     {
         $account = Account::factory()->create();
-        $response = $this->putJson(route('v1.accounts.update', ['account_id' => $account->id]), [
+        $response = $this->putJson(route('v1.accounts.update', ['id' => $account->id]), [
             'number' => $account->number,
         ]);
         $response->assertAccepted();
@@ -88,14 +88,14 @@ class AccountTest extends TestCase
 
     public function testAccountDeleteResponsesHttpNotFoundWhenThereIsNoAccountInDatabase(): void
     {
-        $response = $this->deleteJson(route('v1.accounts.destroy', ['account_id' => 1]));
+        $response = $this->deleteJson(route('v1.accounts.destroy', ['id' => 1]));
         $response->assertNotFound();
     }
 
     public function testAccountDeleteResponsesHttpAcceptedAndDeletesUser(): void
     {
         $account = Account::factory()->create();
-        $response = $this->deleteJson(route('v1.accounts.destroy', ['account_id' => $account->id]));
+        $response = $this->deleteJson(route('v1.accounts.destroy', ['id' => $account->id]));
         $response->assertAccepted();
         $this->assertSoftDeleted('accounts', ['id' => $account->id]);
     }

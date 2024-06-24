@@ -2,10 +2,15 @@
 
 namespace App\Http\Requests\Account;
 
+use App\Traits\PrepareCardInformation;
+use App\Utils\TranslateNumbers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
 {
+
+    use PrepareCardInformation;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,5 +30,10 @@ class StoreRequest extends FormRequest
             'user_id' => ['required', 'int', 'exists:users,id'],
             'number' => ['required', 'string', 'size:16', 'unique:accounts,number'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->prepareCardNumerics(['number']);
     }
 }

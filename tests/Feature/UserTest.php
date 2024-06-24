@@ -54,20 +54,20 @@ class UserTest extends TestCase
 
     public function testUserShowResponsesHttpNotFoundWhenThereIsNoUserInDatabase(): void
     {
-        $response = $this->getJson(route('v1.users.show', ['user_id' => 1]));
+        $response = $this->getJson(route('v1.users.show', ['id' => 1]));
         $response->assertNotFound();
     }
 
     public function testUserShowResponsesHttpOk(): void
     {
         $user = User::factory()->create();
-        $response = $this->getJson(route('v1.users.show', ['user_id' => $user->id]));
+        $response = $this->getJson(route('v1.users.show', ['id' => $user->id]));
         $response->assertOk();
     }
 
     public function testUserUpdateResponsesNotFound(): void
     {
-        $response = $this->putJson(route('v1.users.update', ['user_id' => 1]), [
+        $response = $this->putJson(route('v1.users.update', ['id' => 1]), [
             'name' => 'amir',
             'phone_number' => '09303557608',
         ]);
@@ -80,7 +80,7 @@ class UserTest extends TestCase
         $user = User::factory()->create(['phone_number' => '09303557608']);
         $user2 = User::factory()->create(['phone_number' => '09303557601']);
 
-        $response = $this->putJson(route('v1.users.update', ['user_id' => $user2->id]), ['phone_number' => $user->phone_number]);
+        $response = $this->putJson(route('v1.users.update', ['id' => $user2->id]), ['phone_number' => $user->phone_number]);
 
         $response->assertUnprocessable();
     }
@@ -89,24 +89,24 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->putJson(route('v1.users.update', ['user_id' => $user->id]), ['name' => 'amir', 'phone_number' => $user->phone_number]);
+        $response = $this->putJson(route('v1.users.update', ['id' => $user->id]), ['name' => 'amir', 'phone_number' => $user->phone_number]);
         $response->assertAccepted();
 
 
-        $response = $this->putJson(route('v1.users.update', ['user_id' => $user->id]), ['name' => 'amir', 'phone_number' => '09303557601']);
+        $response = $this->putJson(route('v1.users.update', ['id' => $user->id]), ['name' => 'amir', 'phone_number' => '09303557601']);
         $response->assertAccepted();
     }
 
     public function testUserDeleteResponsesHttpNotFound(): void
     {
-        $response = $this->deleteJson(route('v1.users.destroy', ['user_id' => 1]));
+        $response = $this->deleteJson(route('v1.users.destroy', ['id' => 1]));
         $response->assertNotFound();
     }
 
     public function testUserDeleteResponsesHttpAcceptedAndDeletesUser(): void
     {
         $user = User::factory()->create();
-        $response = $this->deleteJson(route('v1.users.destroy', ['user_id' => $user->id]));
+        $response = $this->deleteJson(route('v1.users.destroy', ['id' => $user->id]));
         $response->assertAccepted();
 
         $this->assertSoftDeleted('users', ['id' => $user->id]);

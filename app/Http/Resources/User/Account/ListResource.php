@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Account;
+namespace App\Http\Resources\User\Account;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Card\ListResource as CardListResource;
+use App\Http\Resources\Card\ListResource as AccountCardsResource;
 
-class ShowResource extends JsonResource
+class ListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,8 +20,7 @@ class ShowResource extends JsonResource
             'user_id' => $this->user_id,
             'balance' => $this->balance,
             'number' => $this->number,
-            'user' => $this->user,
-            'cards' => CardListResource::collection($this->cards)
+            'cards' => AccountCardsResource::collection($this->cards),
         ];
     }
 }

@@ -11,6 +11,11 @@ return [
         'failed' => 'Cannot create account right now, try again later.',
     ],
 
+    'show' => [
+        'success' => 'Account show',
+        'failed' => 'Cannot find account right now, try again later.'
+    ],
+
     'update' => [
         'success' => 'Account updated',
         'failed' => 'Account update failed, try again later.',

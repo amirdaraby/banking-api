@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Card;
 
+use App\Rules\CardNumber;
 use App\Traits\PrepareCardInformation;
+use App\Utils\TranslateNumbers;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
-
     use PrepareCardInformation;
 
     /**
@@ -27,13 +28,17 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'between:3,255'],
-            'phone_number' => ['string', Rule::unique('users')->ignore($this->route('id'))],
+            'account_id' => ['int', 'exists:accounts,id'],
+            'number' => ['string', 'size:16', Rule::unique('cards')->ignore($this->route('id')), new CardNumber()],
+            'expiration_year' => ['int', 'between:2000,3000'],
+            'expiration_month' => ['int', 'between:1,12'],
+            'cvv2' => ['string', 'between:3,4'],
+            'password' => ['string', 'min:4'],
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        $this->prepareCardNumerics(['phone_number']);
+        $this->prepareCardNumerics(['number', 'expiration_year', 'expiration_month', 'cvv2', 'password']);
     }
 }
