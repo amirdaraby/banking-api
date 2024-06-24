@@ -160,7 +160,9 @@ return [
     'url' => 'The :attribute field must be a valid URL.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
-
+    'not_a_number' => 'The :attribute field must be a number.',
+    'invalid_number' => 'The :attribute field must be a valid number.',
+    'invalid_card_number' => 'The :attribute field must be a valid card number.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

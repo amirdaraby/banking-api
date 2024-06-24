@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\User;
 
+use App\Rules\Number;
+use App\Utils\TranslateNumbers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -23,7 +25,14 @@ class StoreRequest extends FormRequest
     {
         return [
             "name" => ["required", "between:3,255"],
-            "phone_number" => ["required", "string", "numeric", "digits:11", "unique:users,phone_number"]
+            "phone_number" => ["required", "string", new Number(), "unique:users,phone_number"]
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'phone_number' => TranslateNumbers::toEnglish($this->phone_number),
+        ]);
     }
 }

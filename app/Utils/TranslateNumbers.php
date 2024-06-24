@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-class Numbers
+class TranslateNumbers
 {
     const PERSIAN_NUMBERS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Account;
 
+use App\Rules\Number;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,8 +24,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'between:3,255'],
-            'phone_number' => ['string', Rule::unique('users')->ignore($this->route('user_id'))],
+            'user_id' => ['int', 'exists:users,id'],
+            'balance' => ['int'],
+            'number' => ['string', new Number(), Rule::unique('accounts')->ignore($this->route('account_id'))]
         ];
     }
 }

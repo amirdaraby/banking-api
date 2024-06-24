@@ -11,4 +11,9 @@ class CardRepository extends BaseRepository implements CardRepositoryInterface
     {
         parent::__construct($model);
     }
+
+    public function listByAccountId(int $accountId, array $columns = ['*'], array $relations = [])
+    {
+        return $this->model->query()->select($columns)->with($relations)->where('account_id', '=', $accountId)->get();
+    }
 }
