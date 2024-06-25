@@ -8,9 +8,12 @@ use App\Events\CardToCardSuccessEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ResponseJson;
 use App\Http\Requests\Transaction\CardToCardRequest;
+use App\Http\Resources\Transaction\TopUsers\UserResource;
+use App\Http\Resources\User\ListResource;
 use App\Repositories\Card\CardRepositoryInterface;
 use App\Repositories\Transaction\TransactionRepositoryInterface;
 use App\Repositories\TransactionCost\TransactionCostRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +24,7 @@ class TransactionController extends Controller
         protected TransactionRepositoryInterface     $transactionRepository,
         protected CardRepositoryInterface            $cardRepository,
         protected TransactionCostRepositoryInterface $transactionCostRepository,
+        protected UserRepositoryInterface            $userRepository,
     )
     {
     }
@@ -91,7 +95,17 @@ class TransactionController extends Controller
 
         event(new CardToCardSuccessEvent($receivingTransaction, $sendingTransaction));
 
-        return ResponseJson::success(['send_transaction' => $sendingTransaction, 'recivied_transaction' => $receivingTransaction], __('card_to_card.success'), Response::HTTP_OK);
+        return ResponseJson::success(['send_transaction' => $sendingTransaction, 'received_transaction' => $receivingTransaction], __('card_to_card.success'), Response::HTTP_OK);
     }
 
+    public function topUsers(): JsonResponse
+    {
+        $topUsers = $this->userRepository->listTopUsers();
+
+        $topUsers->map(function ($user) {
+            $user->last_transactions = $this->transactionRepository->listByUserId($user->id, ['transactions.*', 'transaction_costs.amount as transaction_cost_amount'], orderBy: 'transactions.created_at', orderByDirection: 'desc');
+        });
+
+        return ResponseJson::success(UserResource::collection($topUsers), __('card_to_card.top_users.success'), Response::HTTP_OK);
+    }
 }

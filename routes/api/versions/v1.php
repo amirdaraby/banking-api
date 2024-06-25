@@ -6,11 +6,6 @@ use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::name('transactions.')->prefix('/transactions')->group(function () {
-    Route::post('/card-to-card', [TransactionController::class, 'cardToCard'])->name('mamad');
-});
-
 Route::name('users.')->prefix('/users')->group(function () {
     Route::get("/", [UserController::class, 'index'])->name('index');
     Route::post("/", [UserController::class, 'store'])->name('store');
@@ -34,3 +29,9 @@ Route::name('cards.')->prefix('/cards')->group(function () {
     Route::put("/{id}", [CardController::class, 'update'])->name('update');
     Route::delete("/{id}", [CardController::class, 'destroy'])->name('destroy');
 });
+
+Route::name('transactions.')->prefix('/transactions')->group(function () {
+    Route::post('/card-to-card', [TransactionController::class, 'cardToCard'])->name('card-to-card');
+    Route::get('/top-users', [TransactionController::class, 'topUsers'])->name('top-users');
+});
+

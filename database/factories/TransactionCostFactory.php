@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class TransactionCostFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'transaction_id' => Transaction::factory(),
+            'amount' => config('banking.card_to_card.transaction_cost'),
         ];
     }
 }

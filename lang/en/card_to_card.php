@@ -10,4 +10,8 @@ return [
         'increase' => "Bank\n card-to-card transfer\n amount: - :amount\n cost_amount: :cost_amount\n done at: :done_at",
         'decrease' => "Bank\n card-to-card deposit\n amount: + :amount\n cost_amount: :cost_amount\n done at: :done_at",
     ],
+
+    'top_users' => [
+        'success' => 'users with must transactions in last 10 minutes.'
+    ]
 ];

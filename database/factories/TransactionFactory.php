@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\TransactionDirection;
+use App\Enums\TransactionStatus;
+use App\Models\Card;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,10 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'card_id' => Card::factory(),
+            'amount' => $this->faker->numberBetween(10_000, 500_000_000),
+            'type' => $this->faker->randomElement(TransactionDirection::values()),
+            'status' => TransactionStatus::SUCCESS->value,
         ];
     }
 }

@@ -30,7 +30,7 @@ class UpdateRequest extends FormRequest
         return [
             'user_id' => ['int', 'exists:users,id'],
             'balance' => ['int'],
-            'number' => ['string', new Number(), Rule::unique('accounts')->ignore($this->route('id'))]
+            'number' => ['string', new Number(), Rule::unique('accounts', 'number')->ignore($this->route('id'))],
         ];
     }
 
