@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ghasedak/php": "^2.1",
+        "kavenegar/php": "^1.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9"
     },
