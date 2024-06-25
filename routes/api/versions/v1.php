@@ -2,8 +2,14 @@
 
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\CardController;
+use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::name('transactions.')->prefix('/transactions')->group(function () {
+    Route::post('/card-to-card', [TransactionController::class, 'cardToCard'])->name('mamad');
+});
 
 Route::name('users.')->prefix('/users')->group(function () {
     Route::get("/", [UserController::class, 'index'])->name('index');

@@ -20,4 +20,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->renderable(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e){
             return \App\Http\Helpers\ResponseJson::error("Not found", \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         });
-    })->create();
+    })->withEvents(discover: __DIR__.'/../app/Listeners')
+    ->create();

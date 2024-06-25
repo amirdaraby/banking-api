@@ -16,4 +16,9 @@ class CardRepository extends BaseRepository implements CardRepositoryInterface
     {
         return $this->model->query()->select($columns)->with($relations)->where('account_id', '=', $accountId)->get();
     }
+
+    public function findOrNullByNumber(string $number, array $columns = ['*'], array $relations = [])
+    {
+        return $this->model->query()->select($columns)->with($relations)->where('number', '=', $number)->first();
+    }
 }

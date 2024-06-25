@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Account;
+namespace App\Http\Requests\Transaction;
 
+use App\Rules\CardNumber;
+use App\Rules\CardToCardAmount;
 use App\Traits\PrepareCardInformation;
-use App\Utils\TranslateNumbers;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class CardToCardRequest extends FormRequest
 {
-
     use PrepareCardInformation;
 
     /**
@@ -27,13 +27,14 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'int', 'exists:users,id'],
-            'number' => ['required', 'string', 'size:16', 'unique:accounts,number', ''],
+            "source_card" => ["required", "string", new CardNumber()],
+            "destination_card" => ["required", "string", new CardNumber()],
+            "amount" => ["required", "int", new CardToCardAmount()],
         ];
     }
 
-    protected function prepareForValidation(): void
+    protected function prepareForValidation()
     {
-        $this->prepareCardNumerics(['number']);
+        $this->prepareCardNumerics(['from_card_number', 'to_card_number', 'amount']);
     }
 }

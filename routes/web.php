@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    \App\Sms\Facades\Sms::send();
+    return view('welcome');
 });

@@ -13,6 +13,18 @@ services:
         depends_on:
             - mysql
 
+    supervisor:
+        container_name: banking-api-supervisor
+        build:
+            args:
+                user: 0
+            context: ./docker/php
+        restart: always
+        volumes:
+            - ./:/var/www/html
+        entrypoint: [ "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]
+        depends_on:
+            - redis
     nginx:
         container_name: banking-api-nginx
         image: nginx:latest

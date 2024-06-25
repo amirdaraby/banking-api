@@ -27,4 +27,9 @@ class User extends Model
         return $this->hasMany(Account::class);
     }
 
+    public function routeNotificationForSms(): string
+    {
+        return $this->getAttributeValue('phone_number');
+    }
+
 }
