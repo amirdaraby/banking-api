@@ -5,13 +5,11 @@ return [
     'insufficient_balance' => 'Your balance is not enough,your balance: :your needed balance: :needed',
     'failed' => 'Transaction failed, please try again later.',
     'succeeded' => 'Transaction succeeded.',
+    'same_cards' => 'Both cards have been same.',
 
     'sms' => [
         'increase' => "Bank\n card-to-card transfer\n amount: - :amount\n cost_amount: :cost_amount\n done at: :done_at",
         'decrease' => "Bank\n card-to-card deposit\n amount: + :amount\n cost_amount: :cost_amount\n done at: :done_at",
     ],
 
-    'top_users' => [
-        'success' => 'users with must transactions in last 10 minutes.'
-    ]
 ];

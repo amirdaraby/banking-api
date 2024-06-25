@@ -19,7 +19,7 @@ class CardFactory extends Factory
     {
         return [
             'account_id' => Account::factory(),
-            'number' => $this->faker->unique()->creditCardNumber(),
+            'number' => $this->faker->unique()->creditCardNumber('Visa'),
             'expiration_year' => $this->faker->numberBetween(2000, 3000),
             'expiration_month' => $this->faker->numberBetween(1,12),
             'cvv2' => $this->faker->numerify(),

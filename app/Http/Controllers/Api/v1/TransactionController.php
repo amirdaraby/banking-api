@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ResponseJson;
 use App\Http\Requests\Transaction\CardToCardRequest;
 use App\Http\Resources\Transaction\TopUsers\UserResource;
-use App\Http\Resources\User\ListResource;
 use App\Repositories\Card\CardRepositoryInterface;
 use App\Repositories\Transaction\TransactionRepositoryInterface;
 use App\Repositories\TransactionCost\TransactionCostRepositoryInterface;
@@ -31,16 +30,20 @@ class TransactionController extends Controller
 
     public function cardToCard(CardToCardRequest $request): JsonResponse
     {
+        if ($request->validated('source_card') == $request->validated('destination_card')) {
+            return ResponseJson::error(__('card_to_card.same_cards'));
+        }
+
         $sourceCard = $this->cardRepository->findOrNullByNumber($request->validated('source_card'), relations: ['account', 'account.user']);
 
         if (is_null($sourceCard)) {
-            return ResponseJson::error(__('card_to_card.card_not_found', ['number' => $request->validated('source_card')]));
+            return ResponseJson::error(__('card_to_card.card_not_found', ['number' => $request->validated('source_card')]), Response::HTTP_NOT_FOUND);
         }
 
         $destinationCard = $this->cardRepository->findOrNullByNumber($request->validated('destination_card'), relations: ['account', 'account.user']);
 
         if (is_null($destinationCard)) {
-            return ResponseJson::error(__('card_to_card.card_not_found', ['number' => $request->validated('destination_card')]));
+            return ResponseJson::error(__('card_to_card.card_not_found', ['number' => $request->validated('destination_card')]), Response::HTTP_NOT_FOUND);
         }
 
         $transactionCost = config('banking.card_to_card.transaction_cost');
@@ -102,10 +105,14 @@ class TransactionController extends Controller
     {
         $topUsers = $this->userRepository->listTopUsers();
 
+        if ($topUsers->isEmpty()) {
+            return ResponseJson::error(__('top_users.not_found'), Response::HTTP_NOT_FOUND);
+        }
+
         $topUsers->map(function ($user) {
             $user->last_transactions = $this->transactionRepository->listByUserId($user->id, ['transactions.*', 'transaction_costs.amount as transaction_cost_amount'], orderBy: 'transactions.created_at', orderByDirection: 'desc');
         });
 
-        return ResponseJson::success(UserResource::collection($topUsers), __('card_to_card.top_users.success'), Response::HTTP_OK);
+        return ResponseJson::success(UserResource::collection($topUsers), __('top_users.success'), Response::HTTP_OK);
     }
 }
