@@ -1,7 +1,7 @@
 version: '3.8'
 services:
     php:
-        container_name: banking-api-php
+        container_name: ${APP_NAME}-php
         build:
             args:
                 user: ${WWW_USER:-0}
@@ -14,7 +14,7 @@ services:
             - mysql
 
     supervisor:
-        container_name: banking-api-supervisor
+        container_name: ${APP_NAME}-supervisor
         build:
             args:
                 user: 0
@@ -26,7 +26,7 @@ services:
         depends_on:
             - redis
     nginx:
-        container_name: banking-api-nginx
+        container_name: ${APP_NAME}-nginx
         image: nginx:latest
         restart: unless-stopped
         ports:
@@ -38,7 +38,7 @@ services:
             - php
 
     mysql:
-        container_name: banking-api-mysql
+        container_name: ${APP_NAME}-mysql
         image: mysql:8
         command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         restart: unless-stopped
@@ -58,7 +58,7 @@ services:
             - ./docker/mysql/sql:/docker-entrypoint-initdb.d
 
     redis:
-        container_name: banking-api-redis
+        container_name: ${APP_NAME}-redis
         restart: unless-stopped
         image: redis:latest
         ports:
