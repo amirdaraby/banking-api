@@ -2,11 +2,10 @@
 
 namespace App\Repositories;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class BaseRepository implements BaseRepositoryInterface
 {
@@ -15,84 +14,98 @@ class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param array $columns
-     * @param array $relations
-     * @param string|null $orderBy
-     * @param string $orderByDirection
-     * @return array|Builder[]|Collection|HigherOrderBuilderProxy[]
+     * Get all records with optional filtering and sorting
      */
-    public function list(array $columns = ["*"], array $relations = [], string $orderBy = null, string $orderByDirection = 'asc')
-    {
-        return $this->model->query()->select($columns)->with($relations)
-            ->when($orderBy, fn(Builder $query) => $query->orderBy($orderBy, $orderByDirection))
+    public function list(
+        array $columns = ['*'],
+        array $relations = [],
+        ?string $orderBy = null,
+        string $orderDirection = 'asc'
+    ): Collection {
+        return $this->buildBaseQuery($columns, $relations, $orderBy, $orderDirection)
             ->get();
     }
 
-
     /**
-     * @param array $columns
-     * @param array $relations
-     * @param int $perPage
-     * @param string|null $orderBy
-     * @param string $orderByDirection
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * Get paginated records with optional filtering and sorting
      */
-    public function listPaginated(array $columns = ["*"], array $relations = [], int $perPage = 50, string $orderBy = null, string $orderByDirection = 'asc')
-    {
-        return $this->model->query()->select($columns)->with($relations)
-            ->when($orderBy, fn(Builder $query) => $query->orderBy($orderBy, $orderByDirection))
+    public function listPaginated(
+        array $columns = ['*'],
+        array $relations = [],
+        int $perPage = 50,
+        ?string $orderBy = null,
+        string $orderDirection = 'asc'
+    ): LengthAwarePaginator {
+        return $this->buildBaseQuery($columns, $relations, $orderBy, $orderDirection)
             ->paginate($perPage);
     }
 
-
     /**
-     * @param int $id
-     * @param array $columns
-     * @param array $relations
-     * @return Builder|Builder[]|Collection|Model|null
+     * Find a record by ID or throw exception
      */
-    public function findOrFailById(int $id, array $columns = ["*"], array $relations = [])
-    {
-        return $this->model->query()->select($columns)->with($relations)->findOrFail($id);
+    public function findOrFailById(
+        int $id,
+        array $columns = ['*'],
+        array $relations = []
+    ): Model {
+        return $this->buildBaseQuery($columns, $relations)
+            ->findOrFail($id);
     }
 
     /**
-     * @param int $id
-     * @param array $columns
-     * @param array $relations
-     * @return Builder|Builder[]|Collection|Model|null
+     * Find a record by ID or return null
      */
-    public function findOrNullById(int $id, array $columns = ["*"], array $relations = [])
-    {
-        return $this->model->query()->select($columns)->with($relations)->find($id);
+    public function findOrNullById(
+        int $id,
+        array $columns = ['*'],
+        array $relations = []
+    ): ?Model {
+        return $this->buildBaseQuery($columns, $relations)
+            ->find($id);
     }
 
     /**
-     * @param array $attributes
-     * @return Builder|Model
+     * Create a new record
      */
-    public function create(array $attributes)
+    public function create(array $attributes): Model
     {
-        return $this->model->query()->create($attributes);
+        return $this->model->newQuery()
+            ->create($attributes);
     }
 
     /**
-     * @param int $id
-     * @param array $attributes
-     * @return bool|int
+     * Update a record by ID with lock
      */
-    public function updateById(int $id, array $attributes = [])
+    public function updateById(int $id, array $attributes = []): bool
     {
-        return $this->model->query()->findOrFail($id)->lockForUpdate()->update($attributes);
+        return $this->model->newQuery()
+            ->findOrFail($id)
+            ->lockForUpdate()
+            ->update($attributes);
     }
 
     /**
-     * @param int $id
-     * @return bool|mixed|null
+     * Delete a record by ID
      */
-    public function deleteById(int $id)
+    public function deleteById(int $id): bool
     {
-        return $this->model->query()->findOrFail($id)->delete();
+        return $this->model->newQuery()
+            ->findOrFail($id)
+            ->delete();
     }
 
+    /**
+     * Build base query with common options
+     */
+    protected function buildBaseQuery(
+        array $columns = ['*'],
+        array $relations = [],
+        ?string $orderBy = null,
+        string $orderDirection = 'asc'
+    ): Builder {
+        return $this->model->newQuery()
+            ->select($columns)
+            ->with($relations)
+            ->when($orderBy, fn (Builder $query) => $query->orderBy($orderBy, $orderDirection));
+    }
 }
