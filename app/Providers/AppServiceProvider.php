@@ -27,6 +27,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CardRepositoryInterface::class, CardRepository::class);
         $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
         $this->app->bind(TransactionCostRepositoryInterface::class, TransactionCostRepository::class);
+        $this->renderable(function (ValidationException $e, $request) {
+         if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => __('errors.validation_failed'),
+                'errors' => $e->errors(),
+                'code' => 422
+            ], 422);
+        }
+    });
     }
 
     /**
